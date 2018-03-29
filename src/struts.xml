@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--大坑，头部信息要写对 -->
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+
+<struts>
+    <constant name="struts.devMode" value="true"/>
+    <constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+    <constant name="struts.configuration.xml.reload" value="true"/>
+
+    <package name="qtech" namespace="/" extends="struts-default">
+
+
+        <interceptors>
+            <interceptor name="authority"
+                         class="interceptor.AuthorityInterceptor"/>
+
+
+            <interceptor-stack name="mydefault">
+                <interceptor-ref name="defaultStack" />
+                <interceptor-ref name="authority" />
+            </interceptor-stack>
+
+        </interceptors>
+
+
+
+        <global-results>
+            <!-- 当返回login视图名时，转入loginForm.jsp页面 -->
+            <result name="login">/userLogin.jsp</result>
+        </global-results>
+
+
+        <action name="myLogin" class="action.MyLoginAction">
+            <result name="success" type="redirect">getAllGoods</result>
+            <result name="error">userLogin.jsp</result>
+
+        </action>
+
+        <action name="getAllGoods" class="action.GetAllGoodsAction">
+            <result name="success">goodslist.jsp</result>
+
+
+        </action>
+        
+        <action name="cart" class="action.CartAction" >
+            <interceptor-ref name="defaultStack"/>
+            <!-- 应用自定义拦截器 -->
+            <interceptor-ref name="authority"/>
+
+            <result name="success">cart.jsp</result>
+            <allowed-methods>addToCart,modifyGoods,clearCart,delete</allowed-methods>
+
+
+
+        </action>
+
+
+
+
+
+        <action name="*">
+            <result name="success">/{1}.jsp</result>
+        </action>
+
+
+
+
+    </package>
+
+
+
+    
+</struts>
